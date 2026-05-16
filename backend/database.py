@@ -3,7 +3,7 @@ import sqlite3
 from datetime import datetime, timezone
 from contextlib import contextmanager
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "data", "app.db")
+DB_PATH = os.path.join(os.getenv("VERCEL", "") and "/tmp" or os.path.dirname(__file__), "data", "app.db")
 
 
 def get_db_path():
