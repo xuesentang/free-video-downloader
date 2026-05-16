@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-white rounded-2xl border border-border shadow-lg overflow-hidden h-full">
+  <div class="glass-card rounded-2xl border border-border shadow-lg overflow-hidden h-full">
     <!-- 视频信息头部 -->
     <div class="flex flex-col gap-5 p-5 sm:p-6">
-      <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-100">
+      <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-bg-elevated">
         <img
           v-if="video.thumbnail"
           :src="thumbnailUrl"
@@ -32,7 +32,7 @@
             </svg>
             {{ video.uploader }}
           </span>
-          <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary-light text-primary rounded-full text-xs font-medium">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
             {{ video.platform }}
           </span>
           <span v-if="video.view_count" class="inline-flex items-center gap-1">
@@ -50,7 +50,7 @@
     </div>
 
     <!-- 格式选择 -->
-    <div class="border-t border-border-light px-5 sm:px-6 py-5">
+    <div class="border-t border-border px-5 sm:px-6 py-5">
       <h4 class="text-sm font-medium text-text-primary mb-3 flex items-center gap-2">
         <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,12 +67,12 @@
           :class="[
             'flex items-center gap-3 px-4 py-3 rounded-xl border text-left transition-all cursor-pointer',
             selectedFormat === fmt.format_id
-              ? 'border-primary bg-primary-light ring-1 ring-primary/20'
-              : 'border-border-light hover:border-primary/40 hover:bg-gray-50'
+              ? 'border-primary bg-primary/10 ring-1 ring-primary/20'
+              : 'border-border hover:border-primary/40 hover:bg-bg-elevated'
           ]"
         >
           <div class="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center"
-            :class="selectedFormat === fmt.format_id ? 'bg-primary text-white' : 'bg-gray-100 text-text-muted'">
+            :class="selectedFormat === fmt.format_id ? 'bg-primary text-white' : 'bg-bg-elevated text-text-muted'">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
@@ -90,7 +90,7 @@
         <button
           @click="$emit('download', selectedFormat)"
           :disabled="!selectedFormat || downloading"
-          class="w-full inline-flex items-center justify-center gap-2 h-12 px-10 rounded-full bg-primary hover:bg-primary-dark text-white font-medium text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg cursor-pointer"
+          class="w-full inline-flex items-center justify-center gap-2 h-12 px-10 rounded-full btn-primary-glow text-white font-medium text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <svg v-if="downloading" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

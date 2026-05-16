@@ -1,9 +1,10 @@
 <template>
-  <section id="how-to-use" class="py-16 sm:py-20 bg-white" aria-labelledby="howto-heading">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+  <section id="how-to-use" class="py-16 sm:py-20 relative overflow-hidden" aria-labelledby="howto-heading">
+    <div class="absolute inset-0 bg-gradient-to-b from-bg-main via-bg-card to-bg-main"></div>
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
         <h2 id="howto-heading" class="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
-          如何使用 <span class="text-primary">SaveAny</span> 解析视频
+          如何使用 <span class="gradient-text">VideoParser</span> 解析视频
         </h2>
         <p class="text-text-secondary text-base max-w-xl mx-auto">
           只需 3 步，即可免费下载 YouTube、Bilibili、抖音等 1800+ 平台的视频
@@ -12,12 +13,12 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
         <article v-for="step in steps" :key="step.number" class="relative text-center">
-          <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary text-2xl font-bold flex items-center justify-center mx-auto mb-5">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-white text-2xl font-bold flex items-center justify-center mx-auto mb-5 shadow-lg shadow-primary/30">
             {{ step.number }}
           </div>
           <h3 class="text-lg font-semibold text-text-primary mb-2">{{ step.title }}</h3>
           <p class="text-sm text-text-secondary leading-relaxed">{{ step.desc }}</p>
-          <div v-if="step.number < 3" class="hidden md:block absolute top-7 -right-4 text-border" aria-hidden="true">
+          <div v-if="step.number < 3" class="hidden md:block absolute top-7 -right-4 text-border-light" aria-hidden="true">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
             </svg>
@@ -44,7 +45,7 @@ const steps = [
   {
     number: 2,
     title: '粘贴链接并解析',
-    desc: '打开 SaveAny，将复制的链接粘贴到输入框中，点击"解析视频"。系统自动识别平台并解析出视频信息和所有可用清晰度。',
+    desc: '打开 VideoParser，将复制的链接粘贴到输入框中，点击"解析视频"。系统自动识别平台并解析出视频信息和所有可用清晰度。',
   },
   {
     number: 3,

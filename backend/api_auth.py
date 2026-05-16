@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,9 +12,12 @@ from auth import (
     validate_password,
     verify_password,
 )
-from database import create_user, get_user_by_email, NORMAL_USER_USAGE_LIMIT
+from database import create_user, get_user_by_email, activate_vip, NORMAL_USER_USAGE_LIMIT
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+# VIP 激活码从环境变量读取，不硬编码
+VIP_ACTIVATION_CODE = os.getenv("VIP_ACTIVATION_CODE", "")
 
 
 class RegisterRequest(BaseModel):
@@ -24,6 +28,10 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+
+class ActivateVipRequest(BaseModel):
+    code: str
 
 
 def _build_user_response(user: dict) -> dict:
@@ -104,4 +112,36 @@ async def get_me(user: dict = Depends(get_current_user)):
     return {
         "success": True,
         "data": _build_user_response(user),
+    }
+
+
+@router.post("/activate-vip")
+async def activate_vip_endpoint(req: ActivateVipRequest, user: dict = Depends(get_current_user)):
+    """使用激活码升级为 VIP"""
+    if not VIP_ACTIVATION_CODE:
+        raise HTTPException(status_code=503, detail="激活码功能未配置")
+
+    if req.code != VIP_ACTIVATION_CODE:
+        raise HTTPException(status_code=400, detail="激活码错误")
+
+    # 检查是否已经是 VIP
+    if user.get("is_vip") and user.get("vip_expire_at"):
+        try:
+            expire = datetime.fromisoformat(user["vip_expire_at"])
+            if expire.tzinfo is None:
+                expire = expire.replace(tzinfo=timezone.utc)
+            if expire > datetime.now(timezone.utc):
+                raise HTTPException(status_code=400, detail="您已经是 VIP 会员")
+        except ValueError:
+            pass
+
+    success = activate_vip(user["id"])
+    if not success:
+        raise HTTPException(status_code=500, detail="激活失败，请稍后重试")
+
+    # 重新获取用户信息
+    updated_user = get_user_by_email(user["email"])
+    return {
+        "success": True,
+        "data": _build_user_response(updated_user),
     }

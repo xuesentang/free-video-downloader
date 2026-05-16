@@ -1,32 +1,32 @@
 <template>
-  <section id="comparison" class="py-16 sm:py-20 bg-bg-section" aria-labelledby="comparison-heading">
+  <section id="comparison" class="py-16 sm:py-20 bg-bg-main relative" aria-labelledby="comparison-heading">
     <div class="max-w-5xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
         <h2 id="comparison-heading" class="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
-          SaveAny 与其他视频解析工具对比
+          VideoParser 与其他视频解析工具对比
         </h2>
         <p class="text-text-secondary text-base max-w-xl mx-auto">
-          一张表看清 SaveAny 的核心优势，更新于 2026 年 3 月
+          一张表看清 VideoParser 的核心优势，更新于 2026 年 3 月
         </p>
       </div>
 
-      <div class="overflow-x-auto rounded-2xl border border-border-light shadow-sm">
+      <div class="overflow-x-auto rounded-2xl border border-border shadow-lg">
         <table class="w-full text-sm">
           <thead>
-            <tr class="bg-gray-50 text-text-primary">
+            <tr class="bg-bg-elevated text-text-primary">
               <th class="text-left px-5 py-3.5 font-semibold">功能对比</th>
-              <th class="px-5 py-3.5 font-semibold text-primary">SaveAny</th>
-              <th class="px-5 py-3.5 font-semibold">其他在线工具</th>
-              <th class="px-5 py-3.5 font-semibold">桌面下载软件</th>
+              <th class="px-5 py-3.5 font-semibold text-primary">VideoParser</th>
+              <th class="px-5 py-3.5 font-semibold text-text-secondary">其他在线工具</th>
+              <th class="px-5 py-3.5 font-semibold text-text-secondary">桌面下载软件</th>
             </tr>
           </thead>
-          <tbody class="bg-white">
-            <tr v-for="(row, i) in rows" :key="row.feature" :class="i % 2 === 1 ? 'bg-gray-50/50' : ''">
+          <tbody class="bg-bg-card">
+            <tr v-for="(row, i) in rows" :key="row.feature" :class="i % 2 === 1 ? 'bg-bg-elevated/30' : ''" class="border-t border-border">
               <td class="px-5 py-3 text-text-primary font-medium">{{ row.feature }}</td>
               <td class="px-5 py-3 text-center">
                 <span v-if="row.saveany === true" class="text-success text-base">✓</span>
                 <span v-else-if="row.saveany === false" class="text-text-muted">✗</span>
-                <span v-else class="text-text-primary">{{ row.saveany }}</span>
+                <span v-else class="text-primary font-semibold">{{ row.saveany }}</span>
               </td>
               <td class="px-5 py-3 text-center text-text-secondary">
                 <span v-if="row.online === true" class="text-success text-base">✓</span>

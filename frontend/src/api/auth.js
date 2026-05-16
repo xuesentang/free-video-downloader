@@ -64,3 +64,10 @@ export function logout() {
 export function isLoggedIn() {
   return !!getToken()
 }
+
+export async function activateVip(code) {
+  const res = await axios.post('/api/auth/activate-vip', { code }, { headers: authHeaders() })
+  const user = res.data.data
+  saveUser(user)
+  return user
+}

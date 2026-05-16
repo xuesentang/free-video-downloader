@@ -2,16 +2,27 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-primary: #1777FF;
-  --color-primary-dark: #1260DD;
-  --color-primary-light: #E8F1FF;
-  --color-bg-main: #FFFFFF;
-  --color-bg-section: #F8FAFC;
-  --color-text-primary: #1F1F1F;
-  --color-text-secondary: #6B7280;
-  --color-text-muted: #9CA3AF;
-  --color-border: #E5E7EB;
-  --color-border-light: #F3F4F6;
+  /* ===== 赛博朋克暗色主题配色 ===== */
+  --color-primary: #A855F7;
+  --color-primary-dark: #7C3AED;
+  --color-primary-light: rgba(168, 85, 247, 0.15);
+  --color-primary-glow: #C084FC;
+
+  --color-accent: #06B6D4;
+  --color-accent-glow: #22D3EE;
+
+  --color-bg-main: #0B0F1A;
+  --color-bg-card: #111827;
+  --color-bg-elevated: #1A1F2E;
+  --color-bg-section: #0F1525;
+
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+
+  --color-border: #1E293B;
+  --color-border-light: #334155;
+
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
@@ -44,4 +55,117 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ===== 全局滚动条样式 ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg-main);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ===== 玻璃拟态卡片 ===== */
+.glass-card {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+/* ===== 霓虹边框 ===== */
+.neon-border {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15), inset 0 0 20px rgba(168, 85, 247, 0.05);
+}
+
+/* ===== 霓虹文字发光 ===== */
+.neon-text {
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.5), 0 0 40px rgba(168, 85, 247, 0.3);
+}
+
+/* ===== 渐变文字 ===== */
+.gradient-text {
+  background: linear-gradient(135deg, #A855F7, #06B6D4, #A855F7);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-x 8s ease infinite;
+}
+
+/* ===== 主按钮发光效果 ===== */
+.btn-primary-glow {
+  background: linear-gradient(135deg, #A855F7, #7C3AED);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4), 0 4px 15px rgba(168, 85, 247, 0.3);
+}
+.btn-primary-glow:hover {
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.6), 0 6px 20px rgba(168, 85, 247, 0.4);
+}
+
+/* ===== 输入框发光 ===== */
+.input-glow:focus {
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2), 0 0 20px rgba(168, 85, 247, 0.1);
+}
+
+/* ===== 动画定义 ===== */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ===== Hero 区域背景 ===== */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(168, 85, 247, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6, 182, 212, 0.08), transparent);
+}
+
+/* ===== 网格底纹 ===== */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(51, 65, 85, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(51, 65, 85, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ===== 模式切换活跃状态 ===== */
+.mode-active {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.1));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+/* ===== 功能图标发光 ===== */
+.feature-icon-glow {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+/* ===== Tab 活跃下划线 ===== */
+.tab-active {
+  position: relative;
+}
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #A855F7, #06B6D4);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
 }

@@ -2,16 +2,24 @@
   <div class="min-h-screen flex flex-col bg-bg-main">
     <AppHeader
       :user="currentUser"
+      :mode="appMode"
       @login="showAuthModal('login')"
       @register="showAuthModal('register')"
       @logout="handleLogout"
+      @switch-mode="handleSwitchMode"
+      @vip-activated="handleVipActivated"
     />
+    <!-- 博主追踪模式 -->
+    <TrackerView v-if="appMode === 'tracker'" :user="currentUser" @need-login="showAuthModal('login')" />
+    <!-- 视频下载模式 -->
+    <template v-else>
     <main class="flex-1">
       <HeroSection
         @parse="handleParse"
         :loading="loading"
         :compact="!!videoData"
         :showSlogan="!videoData || demoMode"
+        :pending-url="pendingParseUrl"
       />
       <!-- 视频信息 + AI 总结：左右双栏同屏布局 -->
       <section v-if="videoData" class="py-4 sm:py-6 bg-white">
@@ -48,6 +56,7 @@
       <PricingSection :user="currentUser" @need-login="showAuthModal('login')" />
       <PlatformSection />
     </main>
+    </template>
     <AppFooter />
 
     <AuthModal
@@ -60,7 +69,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, provide, nextTick } from 'vue'
 import AppHeader from './components/AppHeader.vue'
 import HeroSection from './components/HeroSection.vue'
 import VideoResult from './components/VideoResult.vue'
@@ -72,10 +81,13 @@ import PricingSection from './components/PricingSection.vue'
 import PlatformSection from './components/PlatformSection.vue'
 import AppFooter from './components/AppFooter.vue'
 import AuthModal from './components/AuthModal.vue'
+import TrackerView from './components/TrackerView.vue'
+
 import { parseVideo, downloadViaServer } from './api/video.js'
 import { getSavedUser, fetchMe, logout as logoutApi, isLoggedIn } from './api/auth.js'
 
 const demoMode = ref(false)
+const appMode = ref('downloader')
 let enterCount = 0
 let enterTimer = null
 
@@ -112,6 +124,10 @@ function handleAuthSuccess(user) {
   currentUser.value = user
 }
 
+function handleVipActivated(user) {
+  currentUser.value = user
+}
+
 function handleLogout() {
   logoutApi()
   currentUser.value = null
@@ -127,6 +143,25 @@ async function restoreUser() {
     handleLogout()
   }
 }
+
+// ===== 模式切换 =====
+function handleSwitchMode(mode) {
+  appMode.value = mode
+}
+
+// ===== 从博主追踪报告传入链接进行解析 =====
+const pendingParseUrl = ref('')
+
+async function setParseUrl(url) {
+  appMode.value = 'downloader'
+  // 先重置确保 watch 能触发（即使连续点击同一个链接）
+  pendingParseUrl.value = ''
+  // 等待 DOM 更新后再赋值，确保 HeroSection 能收到变化
+  await nextTick()
+  pendingParseUrl.value = url
+}
+
+provide('setParseUrl', setParseUrl)
 
 // ===== 额度用完处理 =====
 function handleQuotaExceeded() {

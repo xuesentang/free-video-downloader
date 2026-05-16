@@ -1,9 +1,9 @@
 <template>
-  <section id="platforms" class="py-16 sm:py-20 bg-bg-section" aria-labelledby="platforms-heading">
+  <section id="platforms" class="py-16 sm:py-20 bg-bg-main relative" aria-labelledby="platforms-heading">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12">
         <h2 id="platforms-heading" class="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
-          支持全球 <span class="text-primary">1800+</span> 视频平台解析
+          支持全球 <span class="gradient-text">1800+</span> 视频平台解析
         </h2>
         <p class="text-text-secondary text-base max-w-xl mx-auto">
           几乎覆盖所有主流视频、音频、社交媒体平台，包括 YouTube、Bilibili、抖音等
@@ -14,7 +14,7 @@
         <div
           v-for="platform in platforms"
           :key="platform.name"
-          class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-white rounded-full border border-border-light shadow-sm hover:shadow-md hover:border-primary/30 transition-all"
+          class="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 glass-card rounded-full border border-border hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all cursor-pointer"
         >
           <span class="text-lg">{{ platform.icon }}</span>
           <span class="text-sm font-medium text-text-primary">{{ platform.name }}</span>

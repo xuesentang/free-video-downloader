@@ -27,7 +27,6 @@ def get_db():
         conn.close()
 
 
-VIP_EMAIL = "18300618398@163.com"
 NORMAL_USER_USAGE_LIMIT = 20
 
 
@@ -76,21 +75,11 @@ def init_db():
         if "usage_count" not in columns:
             conn.execute("ALTER TABLE users ADD COLUMN usage_count INTEGER DEFAULT 0")
 
-        # 确保 VIP 用户（指定邮箱）拥有永久 VIP 权限并设置默认密码
-        from auth import hash_password
-        vip_user = conn.execute("SELECT * FROM users WHERE email = ?", (VIP_EMAIL,)).fetchone()
-        if not vip_user:
-            # 创建 VIP 用户，密码为 985211
-            conn.execute(
-                "INSERT INTO users (email, password_hash, is_vip, vip_expire_at) VALUES (?, ?, ?, ?)",
-                (VIP_EMAIL, hash_password("985211"), 1, "2099-12-31T23:59:59"),
-            )
-        else:
-            # 更新现有 VIP 用户的密码和状态
-            conn.execute(
-                "UPDATE users SET password_hash = ?, is_vip = 1, vip_expire_at = ?, updated_at = datetime('now') WHERE email = ?",
-                (hash_password("985211"), "2099-12-31T23:59:59", VIP_EMAIL),
-            )
+        # 迁移：清除之前硬编码的 VIP 状态，所有用户改为普通用户
+        # VIP 权限现在只能通过激活码获取
+        conn.execute(
+            "UPDATE users SET is_vip = 0, vip_expire_at = NULL, updated_at = datetime('now') WHERE is_vip = 1"
+        )
 
 
 FREE_DAILY_SUMMARY_LIMIT = 3
@@ -109,15 +98,23 @@ def get_user_by_id(user_id: int) -> dict | None:
 
 
 def create_user(email: str, password_hash: str) -> dict:
-    """创建用户，VIP邮箱自动获得永久VIP权限"""
-    is_vip = 1 if email.lower() == VIP_EMAIL.lower() else 0
-    vip_expire_at = "2099-12-31T23:59:59" if is_vip else None
+    """创建普通用户"""
     with get_db() as conn:
         cursor = conn.execute(
             "INSERT INTO users (email, password_hash, is_vip, vip_expire_at) VALUES (?, ?, ?, ?)",
-            (email, password_hash, is_vip, vip_expire_at),
+            (email, password_hash, 0, None),
         )
-        return {"id": cursor.lastrowid, "email": email, "is_vip": is_vip, "vip_expire_at": vip_expire_at}
+        return {"id": cursor.lastrowid, "email": email, "is_vip": 0, "vip_expire_at": None}
+
+
+def activate_vip(user_id: int) -> bool:
+    """激活用户为永久 VIP"""
+    with get_db() as conn:
+        cursor = conn.execute(
+            "UPDATE users SET is_vip = 1, vip_expire_at = ?, updated_at = datetime('now') WHERE id = ?",
+            ("2099-12-31T23:59:59", user_id),
+        )
+        return cursor.rowcount > 0
 
 
 def check_and_increment_summary(user_id: int) -> tuple[bool, int]:
